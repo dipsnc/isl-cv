@@ -1,0 +1,1 @@
+export function ProgressBar({ value, color = 'bg-primary' }: { value: number; color?: string }) { return <div className="h-2 overflow-hidden rounded-full bg-muted"><div className={`h-full rounded-full ${color} transition-all duration-500`} style={{ width: `${value}%` }} /></div>; }
