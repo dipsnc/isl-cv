@@ -1,0 +1,9 @@
+opencv-python
+mediapipe==0.10.21
+scikit-learn
+pandas
+numpy
+joblib
+fastapi
+uvicorn[standard]
+python-multipart

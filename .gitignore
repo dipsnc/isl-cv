@@ -1,0 +1,25 @@
+# Datasets
+Data/
+datasets/
+dataset/
+*.zip
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+venv/
+.venv/
+
+# FastAPI
+uvicorn.sock
+uvicorn.pid
+uvicorn.log
+uvicorn.err
+
+# UI (Frontend)
+.output/
+dist/
+.parcel-cache/
+node_modules/
