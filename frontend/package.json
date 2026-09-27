@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mediapipe/camera_utils": "^0.3.1675466862",
+    "@mediapipe/drawing_utils": "^0.3.1675466124",
+    "@mediapipe/hands": "^0.4.1675469240",
     "@radix-ui/react-toast": "^1.2.23",
     "@radix-ui/react-tooltip": "^1.2.16",
     "@tailwindcss/vite": "^4.3.3",

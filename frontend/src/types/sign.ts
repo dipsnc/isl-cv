@@ -1,4 +1,4 @@
-export type SignId = 'hello' | 'thank-you' | 'water' | 'help' | 'please';
+export type SignId = 'a' | 'b' | 'c' | 'd';
 
 export type Sign = {
   id: SignId;

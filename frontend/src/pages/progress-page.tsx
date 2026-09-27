@@ -9,5 +9,105 @@ import type { SignId } from '@/types/sign';
 export function ProgressPage({ progress, onSignOut }: { progress: Record<SignId, number>; onSignOut: () => void }) {
   const [, setLocation] = useLocation();
   const average = Math.round(signs.reduce((a, s) => a + progress[s.id], 0) / signs.length);
-  return <AppShell active="/progress" user={localStorage.getItem('signlearn-user') || 'Aarav'} onSignOut={onSignOut}><div className="animate-rise"><span className="font-mono-ui text-xs uppercase tracking-[.18em] text-primary">Your progress</span><h1 className="mt-3 font-display text-6xl tracking-[-.05em]">A record of trying.</h1><p className="mt-4 max-w-xl text-muted-foreground">Every sign you return to is a small act of connection. Here is how your starter path is unfolding.</p><div className="mt-10 grid gap-5 md:grid-cols-5"><div className="rounded-[26px] bg-[#173f38] p-7 text-[#fff8ed]"><span className="font-mono-ui text-[10px] uppercase tracking-[.18em] text-[#f1c98b]">Overall</span><p className="mt-5 font-display text-6xl">{average}<span className="text-3xl">%</span></p><p className="mt-2 text-sm text-[#b6d0c3]">of your starter path</p></div><div className="rounded-[26px] border border-border bg-card p-7"><span className="font-mono-ui text-[10px] uppercase tracking-[.18em] text-muted-foreground">Completed</span><p className="mt-5 font-display text-6xl text-primary">{signs.filter((s) => progress[s.id] === 100).length}<span className="text-3xl text-foreground">/5</span></p><p className="mt-2 text-sm text-muted-foreground">signs learned</p></div><div className="rounded-[26px] border border-border bg-card p-7"><span className="font-mono-ui text-[10px] uppercase tracking-[.18em] text-muted-foreground">Accuracy</span><p className="mt-5 font-display text-6xl text-primary">92<span className="text-3xl">%</span></p><p className="mt-2 text-sm text-muted-foreground">average confidence</p></div><div className="rounded-[26px] border border-border bg-card p-7"><span className="font-mono-ui text-[10px] uppercase tracking-[.18em] text-muted-foreground">XP</span><p className="mt-5 font-display text-6xl text-[#bd633f]">120</p><p className="mt-2 text-sm text-muted-foreground">earned so far</p></div><div className="rounded-[26px] border border-border bg-card p-7"><span className="font-mono-ui text-[10px] uppercase tracking-[.18em] text-muted-foreground">Streak</span><p className="mt-5 font-display text-6xl text-[#bd633f]">3</p><p className="mt-2 text-sm text-muted-foreground">days of showing up</p></div></div><section className="mt-14"><div className="flex items-end justify-between"><div><span className="font-mono-ui text-xs uppercase tracking-[.18em] text-primary">Starter path</span><h2 className="mt-3 font-display text-4xl tracking-[-.04em]">Five useful beginnings.</h2></div><span className="text-sm text-muted-foreground">18 practice sessions</span></div><div className="mt-7 overflow-hidden rounded-[26px] border border-border bg-card">{signs.map((sign, i) => <div key={sign.id} data-testid={`row-progress-${sign.id}`} className="grid items-center gap-4 border-b border-border p-5 last:border-0 sm:grid-cols-[40px_1fr_160px_100px]"><span className="font-mono-ui text-xs text-muted-foreground">0{i + 1}</span><div><div className="flex items-center gap-3"><h3 className="font-display text-2xl">{sign.name}</h3><span className="text-xs text-muted-foreground">{sign.phonetic}</span></div><div className="mt-2 max-w-md"><ProgressBar value={progress[sign.id]} color={progress[sign.id] === 100 ? 'bg-primary' : 'bg-[#e0ae65]'} /></div></div><span className="text-sm text-muted-foreground">{progress[sign.id] === 100 ? 'Ready to use' : progress[sign.id] ? `${progress[sign.id]}% practiced` : 'Not started'}</span><Button testId={`button-progress-${sign.id}`} variant={progress[sign.id] === 100 ? 'ghost' : 'secondary'} className="px-3 py-2 text-xs" onClick={() => setLocation(`/lesson/${sign.id}`)}>{progress[sign.id] === 100 ? 'Review' : 'Continue'} <ChevronRight size={14} /></Button></div>)}</div><div className="mt-8 grid gap-4 md:grid-cols-3"><div className="rounded-[24px] border border-border bg-[#fff3df] p-5"><span className="text-2xl">01</span><h3 className="mt-5 font-display text-2xl">First Sign</h3><p className="mt-1 text-sm text-muted-foreground">You started your learning path.</p></div><div className="rounded-[24px] border border-border bg-[#e4efe7] p-5"><span className="text-2xl">05</span><h3 className="mt-5 font-display text-2xl">Five Signs Learned</h3><p className="mt-1 text-sm text-muted-foreground">A badge waiting for your full starter set.</p></div><div className="rounded-[24px] border border-border bg-[#f5e4e9] p-5"><span className="text-2xl">03</span><h3 className="mt-5 font-display text-2xl">Practice Streak</h3><p className="mt-1 text-sm text-muted-foreground">Three days of showing up.</p></div></div></section></div></AppShell>;
+  const completed = signs.filter((s) => progress[s.id] === 100).length;
+
+  return (
+    <AppShell active="/progress" user={localStorage.getItem('signlearn-user') || 'Learner'} onSignOut={onSignOut}>
+      <div className="animate-rise">
+        <span className="font-mono-ui text-xs uppercase tracking-[.18em] text-primary">Your progress</span>
+        <h1 className="mt-3 font-display text-6xl tracking-[-.05em]">A record of trying.</h1>
+        <p className="mt-4 max-w-xl text-muted-foreground">
+          Every sign you return to is a small act of connection. Here is how your A–D path is unfolding.
+        </p>
+
+        <div className="mt-10 grid gap-5 md:grid-cols-5">
+          <div className="rounded-[26px] bg-[#173f38] p-7 text-[#fff8ed]">
+            <span className="font-mono-ui text-[10px] uppercase tracking-[.18em] text-[#f1c98b]">Overall</span>
+            <p className="mt-5 font-display text-6xl">{average}<span className="text-3xl">%</span></p>
+            <p className="mt-2 text-sm text-[#b6d0c3]">of your starter path</p>
+          </div>
+          <div className="rounded-[26px] border border-border bg-card p-7">
+            <span className="font-mono-ui text-[10px] uppercase tracking-[.18em] text-muted-foreground">Completed</span>
+            <p className="mt-5 font-display text-6xl text-primary">{completed}<span className="text-3xl text-foreground">/{signs.length}</span></p>
+            <p className="mt-2 text-sm text-muted-foreground">letters learned</p>
+          </div>
+          <div className="rounded-[26px] border border-border bg-card p-7">
+            <span className="font-mono-ui text-[10px] uppercase tracking-[.18em] text-muted-foreground">Accuracy</span>
+            <p className="mt-5 font-display text-6xl text-primary">92<span className="text-3xl">%</span></p>
+            <p className="mt-2 text-sm text-muted-foreground">average confidence</p>
+          </div>
+          <div className="rounded-[26px] border border-border bg-card p-7">
+            <span className="font-mono-ui text-[10px] uppercase tracking-[.18em] text-muted-foreground">XP</span>
+            <p className="mt-5 font-display text-6xl text-[#bd633f]">120</p>
+            <p className="mt-2 text-sm text-muted-foreground">earned so far</p>
+          </div>
+          <div className="rounded-[26px] border border-border bg-card p-7">
+            <span className="font-mono-ui text-[10px] uppercase tracking-[.18em] text-muted-foreground">Streak</span>
+            <p className="mt-5 font-display text-6xl text-[#bd633f]">3</p>
+            <p className="mt-2 text-sm text-muted-foreground">days of showing up</p>
+          </div>
+        </div>
+
+        <section className="mt-14">
+          <div className="flex items-end justify-between">
+            <div>
+              <span className="font-mono-ui text-xs uppercase tracking-[.18em] text-primary">Starter path</span>
+              <h2 className="mt-3 font-display text-4xl tracking-[-.04em]">Letters A through D.</h2>
+            </div>
+            <span className="text-sm text-muted-foreground">18 practice sessions</span>
+          </div>
+
+          <div className="mt-7 overflow-hidden rounded-[26px] border border-border bg-card">
+            {signs.map((sign, i) => (
+              <div
+                key={sign.id}
+                data-testid={`row-progress-${sign.id}`}
+                className="grid items-center gap-4 border-b border-border p-5 last:border-0 sm:grid-cols-[40px_1fr_160px_100px]"
+              >
+                <span className="font-mono-ui text-xs text-muted-foreground">0{i + 1}</span>
+                <div>
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-display text-2xl">{sign.name}</h3>
+                    <span className="text-xs text-muted-foreground">{sign.phonetic}</span>
+                  </div>
+                  <div className="mt-2 max-w-md">
+                    <ProgressBar value={progress[sign.id]} color={progress[sign.id] === 100 ? 'bg-primary' : 'bg-[#e0ae65]'} />
+                  </div>
+                </div>
+                <span className="text-sm text-muted-foreground">
+                  {progress[sign.id] === 100 ? 'Ready to use' : progress[sign.id] ? `${progress[sign.id]}% practiced` : 'Not started'}
+                </span>
+                <Button
+                  testId={`button-progress-${sign.id}`}
+                  variant={progress[sign.id] === 100 ? 'ghost' : 'secondary'}
+                  className="px-3 py-2 text-xs"
+                  onClick={() => setLocation(`/lesson/${sign.id}`)}
+                >
+                  {progress[sign.id] === 100 ? 'Review' : 'Continue'} <ChevronRight size={14} />
+                </Button>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            <div className="rounded-[24px] border border-border bg-[#fff3df] p-5">
+              <span className="text-2xl">01</span>
+              <h3 className="mt-5 font-display text-2xl">First Sign</h3>
+              <p className="mt-1 text-sm text-muted-foreground">You started your learning path.</p>
+            </div>
+            <div className="rounded-[24px] border border-border bg-[#e4efe7] p-5">
+              <span className="text-2xl">04</span>
+              <h3 className="mt-5 font-display text-2xl">All Letters Learned</h3>
+              <p className="mt-1 text-sm text-muted-foreground">A badge waiting for your full A–D set.</p>
+            </div>
+            <div className="rounded-[24px] border border-border bg-[#f5e4e9] p-5">
+              <span className="text-2xl">03</span>
+              <h3 className="mt-5 font-display text-2xl">Practice Streak</h3>
+              <p className="mt-1 text-sm text-muted-foreground">Three days of showing up.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </AppShell>
+  );
 }
