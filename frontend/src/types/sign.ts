@@ -11,4 +11,5 @@ export type Sign = {
   accent: string;
   description: string;
   steps: string[];
+  image: string; // path to the sign illustration
 };

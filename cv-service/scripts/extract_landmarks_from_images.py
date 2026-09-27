@@ -14,6 +14,11 @@ RAW_IMAGES_DIR = os.path.join(os.path.dirname(__file__), "..", "dataset", "raw_i
 CSV_PATH = os.path.join(os.path.dirname(__file__), "..", "dataset", "landmarks_images.csv")
 IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png")
 
+# Below this many extracted samples for a sign, train_model.py's report is
+# likely to be noisy for that class — flagged at the end of this script too,
+# so you catch it before spending time training.
+MIN_RECOMMENDED_SAMPLES = 150
+
 
 def find_sign_folder(source_dir, sign):
     """
@@ -42,9 +47,11 @@ def main():
              "included automatically."
     )
     parser.add_argument(
-        "--max-per-sign", type=int, default=300,
+        "--max-per-sign", type=int, default=400,
         help="Max images to read per sign, per source folder (keeps big "
-             "external datasets quick to process). 0 = no limit."
+             "external datasets quick to process). 0 = no limit. Raised "
+             "from the old default of 300 now that letter classes benefit "
+             "from more examples than the word signs did."
     )
     parser.add_argument(
         "--no-balance", action="store_true",
@@ -75,6 +82,7 @@ def main():
     detector = HandDetector(static_image_mode=True)
     rows = []
     skipped = 0
+    extracted_per_sign = {sign: 0 for sign in SIGNS}
 
     # First pass: gather every candidate image path per sign, without
     # processing them yet, so we know the counts before deciding how many
@@ -123,6 +131,7 @@ def main():
                 continue
 
             rows.append(landmarks + [sign])
+            extracted_per_sign[sign] += 1
 
     detector.close()
 
@@ -136,6 +145,15 @@ def main():
         writer.writerows(rows)
 
     print(f"Wrote {len(rows)} samples to {CSV_PATH} ({skipped} images skipped, no hand found)")
+
+    low = {s: n for s, n in extracted_per_sign.items() if 0 < n < MIN_RECOMMENDED_SAMPLES}
+    missing = [s for s, n in extracted_per_sign.items() if n == 0]
+    if low:
+        print(f"\n⚠️  Below the recommended {MIN_RECOMMENDED_SAMPLES} samples after extraction:")
+        for sign, n in sorted(low.items(), key=lambda kv: kv[1]):
+            print(f"   {sign}: {n}")
+    if missing:
+        print("\n⚠️  No usable images found at all for:", ", ".join(missing))
 
 
 if __name__ == "__main__":

@@ -105,13 +105,15 @@ export function Dashboard({ progress, user, onSignOut }: { progress: Record<Sign
               onClick={() => setLocation(`/lesson/${sign.id}`)}
               className="group rounded-[24px] border border-border bg-card p-3 text-left transition hover:-translate-y-1 hover:shadow-[0_14px_30px_hsl(var(--foreground)/.08)]"
             >
-              <div style={{ backgroundColor: sign.tint }} className="relative grid aspect-[1.25] place-items-center overflow-hidden rounded-[18px]">
-                <span className="absolute left-3 top-3 font-mono-ui text-[10px]" style={{ color: sign.accent }}>0{i + 1}</span>
-                <div className="h-16 w-14 rounded-[55%_45%_45%_55%]" style={{ backgroundColor: sign.accent }}>
-                  <span className="relative -top-8 left-1/2 block h-11 w-4 -translate-x-1/2 rounded-full" style={{ backgroundColor: sign.accent }} />
-                </div>
+              <div style={{ backgroundColor: sign.tint }} className="relative aspect-[1.25] overflow-hidden rounded-[18px]">
+                <span className="absolute left-3 top-3 z-10 font-mono-ui text-[10px]" style={{ color: sign.accent }}>0{i + 1}</span>
+                <img
+                  src={sign.image}
+                  alt={`ISL sign for ${sign.name}`}
+                  className="absolute inset-0 h-full w-full object-contain p-3 transition-transform duration-300 group-hover:scale-105"
+                />
                 {progress[sign.id] === 100 && (
-                  <span className="absolute right-2 top-2 grid h-6 w-6 place-items-center rounded-full bg-[#fff8ed] text-primary">
+                  <span className="absolute right-2 top-2 z-10 grid h-6 w-6 place-items-center rounded-full bg-[#fff8ed] text-primary shadow-sm">
                     <Check size={13} />
                   </span>
                 )}
